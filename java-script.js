@@ -1,9 +1,8 @@
 const disp = document.querySelector(".disp");
 const numbers = document.querySelectorAll(".number");
-const buttons = document.querySelector(".buttons")
-
-/*console.log(num)*/
-let curentInput = [];
+const buttons = document.querySelector(".buttons"); 
+ 
+let currentInput = [];
 let firstNumber = 0;
 let secondNumber = 0;
 let operator = ''; 
@@ -14,45 +13,72 @@ buttons.addEventListener("click", event => {
         processInput(event.target.textContent);
     };
 });
+
 document.addEventListener("keydown", event => {
     if (event.key != 'Shift') processInput(event.key)
 });
 
 
 function processInput (inputChar) {
-    console.log(inputChar)
-    if (!isNaN(inputChar)) {
-        curentInput.push(inputChar);
-        disp.textContent = curentInput.join('');
+    if (!isNaN(inputChar) || (inputChar == '.' && !currentInput.includes("."))) {
+        processNumbers(inputChar);
+
+    } else if (inputChar == '=' || inputChar == 'Enter') {
+        processEqual();
 
     } else if ("+-*/".includes(inputChar)) { 
-        firstNumber = +disp.textContent; 
-        operator = inputChar; 
-        curentInput = [];
+        processOperator(inputChar);
 
-    } else if (inputChar == '=' || 'Enter') {
-        secondNumber = +curentInput.join(''); 
-        disp.textContent = calculate(firstNumber, secondNumber, operator);
-        curentInput = [];
+    } else if (inputChar == 'AC' || inputChar == 'Delete') {
+        processAC();
 
-    } else if (inputChar == 'AC' || 'Delete') {
-        disp.textContent = '';
-        curentInput = [];
-        firstNumber = 0;
-        secondNumber = 0;
-
-    } else if (inputChar == 'BS' || 'Backspace') {
-        curentInput.pop();
-        disp.textContent = curentInput.join('');
+    } else if (inputChar == 'BS' || inputChar == 'Backspace') {
+        processBS();
     }
 }
 
+function processNumbers(inputChar) {
+    if (currentInput.length < 21) {
+        currentInput.push(inputChar);
+        disp.textContent = currentInput.join('');
+    }
+};
+
+function processEqual() {
+    secondNumber = +currentInput.join(''); 
+    const result = calculate(firstNumber, secondNumber, operator);
+    disp.textContent = result;
+    firstNumber = result;
+    secondNumber = 0;
+    currentInput = [];
+    operator = '';
+};
+
+function processOperator(inputChar) {
+    if (operator) {
+        processEqual();
+    };
+    firstNumber = +disp.textContent; 
+    operator = inputChar; 
+    currentInput = [];
+};
+
+function processAC() {
+    disp.textContent = '';
+    currentInput = [];
+    firstNumber = 0;
+    secondNumber = 0;
+}; 
+
+function processBS(){
+    currentInput.pop();
+    disp.textContent = currentInput.join('');
+}
 
 function calculate(a, b, operator) {
-    if (operator == '+') firstNumber = a + b;
-    else if (operator == '-') firstNumber = a - b;
-    else if (operator == '*') firstNumber = a * b;
-    else firstNumber = a / b;
-
-    return firstNumber;
+    if (operator == '+') return a + b;
+    else if (operator == '-') return a - b;
+    else if (operator == '*') return a * b;
+    else if (b == 0) return "Error";
+    else return a / b;
 }
