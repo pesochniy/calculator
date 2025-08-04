@@ -14,32 +14,42 @@ let operator = '';
 
 
 buttons.addEventListener("click", event => {
+    console.log(firstNumber)
+    console.log(curentInput)
     if (event.target.classList.contains("number")) {
-        disp.textContent += event.target.textContent;
+        event.target.textContent;
         curentInput.push(event.target.textContent);
-        console.log(curentInput);
-    } else if (event.target.classList.contains("operator")) {
-        firstNumber = +curentInput.join('');
-        operator = event.target.textContent;
-        disp.textContent = '';
+        disp.textContent = curentInput.join('');
+
+    } else if (event.target.classList.contains("operator")) { 
+        firstNumber = +disp.textContent; 
+        operator = event.target.textContent; 
         curentInput = [];
+
     } else if (event.target.classList.contains("equal")) {
         secondNumber = +curentInput.join('');
+        console.log(firstNumber, secondNumber)
         disp.textContent = calculate(firstNumber, secondNumber, operator);
+        curentInput = [];
+
     } else if (event.target.classList.contains("clear")) {
         disp.textContent = '';
         curentInput = [];
         firstNumber = 0;
         secondNumber = 0;
+
     } else if (event.target.classList.contains("backspace")) {
-        curentInput
+        curentInput.pop();
+        disp.textContent = curentInput.join('');
     }
 })
 
 
 function calculate(a, b, operator) {
-    if (operator == '+') return a + b;
-    if (operator == '-') return a - b;
-    if (operator == '*') return a * b;
-    else return a / b;
+    if (operator == '+') firstNumber = a + b;
+    else if (operator == '-') firstNumber = a - b;
+    else if (operator == '*') firstNumber = a * b;
+    else firstNumber = a / b;
+
+    return firstNumber;
 }
