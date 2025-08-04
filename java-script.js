@@ -6,43 +6,46 @@ const buttons = document.querySelector(".buttons")
 let curentInput = [];
 let firstNumber = 0;
 let secondNumber = 0;
-let operator = '';
-
-
-
-
+let operator = ''; 
 
 
 buttons.addEventListener("click", event => {
-    console.log(firstNumber)
-    console.log(curentInput)
-    if (event.target.classList.contains("number")) {
-        event.target.textContent;
-        curentInput.push(event.target.textContent);
+    if (event.target.parentElement == buttons) {
+        processInput(event.target.textContent);
+    };
+});
+document.addEventListener("keydown", event => {
+    if (event.key != 'Shift') processInput(event.key)
+});
+
+
+function processInput (inputChar) {
+    console.log(inputChar)
+    if (!isNaN(inputChar)) {
+        curentInput.push(inputChar);
         disp.textContent = curentInput.join('');
 
-    } else if (event.target.classList.contains("operator")) { 
+    } else if ("+-*/".includes(inputChar)) { 
         firstNumber = +disp.textContent; 
-        operator = event.target.textContent; 
+        operator = inputChar; 
         curentInput = [];
 
-    } else if (event.target.classList.contains("equal")) {
-        secondNumber = +curentInput.join('');
-        console.log(firstNumber, secondNumber)
+    } else if (inputChar == '=' || 'Enter') {
+        secondNumber = +curentInput.join(''); 
         disp.textContent = calculate(firstNumber, secondNumber, operator);
         curentInput = [];
 
-    } else if (event.target.classList.contains("clear")) {
+    } else if (inputChar == 'AC' || 'Delete') {
         disp.textContent = '';
         curentInput = [];
         firstNumber = 0;
         secondNumber = 0;
 
-    } else if (event.target.classList.contains("backspace")) {
+    } else if (inputChar == 'BS' || 'Backspace') {
         curentInput.pop();
         disp.textContent = curentInput.join('');
     }
-})
+}
 
 
 function calculate(a, b, operator) {
